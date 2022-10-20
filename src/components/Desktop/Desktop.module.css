@@ -1,0 +1,65 @@
+.inner_box {
+  background-color: white;
+  margin: 1rem;
+  padding: 1rem;
+}
+.inner_box p {
+  font-size: large;
+}
+
+.top {
+  margin-top: 2rem;
+  line-height: 1rem;
+}
+
+.bullets {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.bullets > span {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #aaa;
+  margin: 0 0.25rem;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.bullets span.active {
+  width: 1.1rem;
+  background-color: #00b0f0;
+  border-radius: 1rem;
+}
+.move {
+  display: flex;
+  justify-content: right;
+  flex-wrap: nowrap;
+}
+.check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.8rem;
+  width: 80%;
+  margin: 0 auto;
+}
+.disabled {
+  display: none;
+}
+.pagination ul li button {
+  color: white;
+  background-color: rgb(199, 199, 199);
+}
+.pagination ul li button:hover {
+  color: #00b0f0;
+  background-color: rgb(199, 199, 199);
+  font-weight: bold;
+}
+.pagination {
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}

@@ -1,0 +1,49 @@
+.screen {
+  margin-top: 16vh;
+}
+
+.inner_box {
+  background-color: white;
+  margin: 1rem;
+  padding: 1rem;
+}
+.inner_box p {
+  font-size: large;
+}
+.red {
+  color: red;
+  font-style: italic;
+  font-weight: 500;
+}
+.top {
+  padding-top: 5rem;
+  line-height: 2rem;
+}
+
+.bullets {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 6rem;
+}
+
+.bullets > span {
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #aaa;
+  margin: 0 0.25rem;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.bullets span.active {
+  width: 1.1rem;
+  background-color: #00b0f0;
+  border-radius: 1rem;
+}
+.next {
+  position: absolute;
+  right: 2%;
+  top: 90.2%;
+}
