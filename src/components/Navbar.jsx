@@ -32,7 +32,7 @@ export default function Navbar(props) {
           alt="Your logo."
           src={
             param
-              ? "https://dynamicliveconversationapi.azurewebsites.net/StaticFiles/Images/CompanyLogo/" +
+              ? "https://peopleintelligenceapi.azurewebsites.net/StaticFiles/Images/CompanyLogo/" +
                 param
               : "https://upload.wikimedia.org/wikipedia/commons/8/85/Logo-Test.png?20171228163613"
           }

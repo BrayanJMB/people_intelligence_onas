@@ -28,7 +28,7 @@ export default function Home() {
       await axios
         .create({
           baseURL:
-            "https://dynamicliveconversationapi.azurewebsites.net/api/OnasSurvey/",
+            "https://peopleintelligenceapi.azurewebsites.net/api/OnasSurvey/",
         })
         .get(`${personId}/${versionId}`, config)
         .then((res) => {
@@ -64,23 +64,22 @@ export default function Home() {
         </h3>
         <p>
           Bienvenido a nuestra herramienta de recolección de datos para el
-          desarrollo del análisis de redes organizacionales que
+          desarrollo del análisis de redes organizacionales que People Intelligence
+          está desarrollando para
           <strong className={styles.red + " " + styles.top}>
             {" "}
             {data?.empresa}{" "}
           </strong>
-          esta desarrollando.
         </p>
         <p className={styles.top}>
           A continuación te formularemos{" "}
-          <strong style={{ fontWeight: "bold" }}>seis</strong> preguntas, que te
+          <strong style={{ fontWeight: "bold" }}>siete</strong> preguntas, que te
           tomaran alrededor de 10 minutos responder.
         </p>
         <p className={styles.top}>
-          Esta información nos ayudara a entender las redes internas de
-          colaboración y como potencializar el impactos positivos que estas
-          tienen en el desarrollo de las funciones de las diversas áreas
-          funcionales y de los empelados que las componen.
+        Esta información nos ayudará a entender las redes
+        internas de interaccióny nos permitirá definir acciones
+        para fortalecer el trabajo colaborativo en la organización.
         </p>
         <div className={styles.bullets}>
           <span className={styles.active}></span>

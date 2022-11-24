@@ -110,7 +110,7 @@ export default function Mobile(props) {
     await axios
       .create({
         baseURL:
-          "https://dynamicliveconversationapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
+          "https://peopleintelligenceapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
       })
       .get("1/5f244111-b80a-421a-b11d-ea59e8156fde", config)
       .then((res) => {

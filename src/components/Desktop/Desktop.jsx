@@ -28,34 +28,34 @@ import axios from "axios";
 
 const data = [
   {
-    title: "Relación General:",
+    title: "Relación Frecuente:",
     question:
-      "1. ¿Cuándo necesitas ayuda en tus responsabilidades a qué personas acudes?",
+      "1. ¿Con quiénes interactúas más en el ejercicio de las funciones de tu cargo? ",
   },
   {
     title: "Relación Información:",
     question:
-      "2. ¿Cuándo necesitas información actualizada y de confianza sobre la empresa a quienes acudes?",
+      "2. Cuando necesitas información para el desarrollo de tus funciones, ¿a quién(es) acudes?",
   },
   {
-    title: "Relación Inspiracional:",
+    title: "Relación de Orientación / Confianza / Consejería / Mentoría::",
     question:
-      "3. ¿Cuándo necesitas consejos o feedback, quién es la personas indicada para ti?",
+      "3. Cuando necesitas guía o consejos en el trabajo, ¿a quién(es) buscas?",
   },
   {
     title: "Relación Transaccional:",
     question:
-      "4. ¿Cuándo necesitas autorizaciones para continuar con el desarrollo de tus funciones?",
+      "4. Cuando necesitas autorizaciones / validaciones para continuar con el desarrollo de tus labores, ¿a quién(es) acudes?",
   },
   {
-    title: "Relación Técnico:",
+    title: "Relación Inspiracional:",
     question:
-      "5. ¿Cuándo necesitas ayuda especializada para el desarrollo de tus responsabilidades a qué personas acudes?",
+      "5. En la organización, ¿a quién(es) consideras un punto de referencia positivo en el marco profesional y/ó personal?",
   },
   {
-    title: "Relación Last:",
+    title: "Relaciones de Entrada:",
     question:
-      "6. Cuándo te necesitan o te contactan, ¿generalmente que personas son y que tipo de interacción es?",
+      "6. ¿Quiénes son las personas que en tu día a día más te buscan para que les colabores con su trabajo?",
   },
 ];
 const name = ["frecuency", "agility", "quality", "closeness"];
@@ -64,32 +64,32 @@ const info = [
   {
     title: "Frecuencia",
     data: [
-      "Varias veces por semana",
-      "1 o mas veces a la semana",
-      "1 o mas veces cada 2 semanas",
-      "1 vez al mes",
+      "Diariamente",
+      "Casi todos los días",
+      "Varias veces a la semana",
+      "Varias veces al mes",
     ],
   },
   {
     title: "Agilidad",
     data: [
-      "Con oportunidad de mejora",
-      "Cumple Expectativas",
       "Por encima de las expectativas",
+      "Cumple Expectativas",
+      "Por debajo de las expectativas",
     ],
   },
   {
     title: "Calidad",
     data: [
-      "Con oportunidad de mejora",
-      "Cumple Expectativas",
       "Por encima de las expectativas",
+      "Cumple Expectativas",
+      "Por debajo de las expectativas",
     ],
   },
   {
     title: "Cercanía",
     data: [
-      "Relación Cercana",
+      "Relación Fluída",
       "Relación Estrictamente laboral",
       "Relación con fricciones",
     ],
@@ -111,7 +111,7 @@ export default function Desktop(props) {
     await axios
       .create({
         baseURL:
-          "https://dynamicliveconversationapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
+          "https://peopleintelligenceapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
       })
       .get("1/5f244111-b80a-421a-b11d-ea59e8156fde", config)
       .then((res) => {

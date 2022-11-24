@@ -111,7 +111,7 @@ export default function Connexion() {
       const response = await axios
         .create({
           baseURL:
-            "https://dynamicliveconversationapi.azurewebsites.net/api/OnasSurvey",
+            "https://peopleintelligenceapi.azurewebsites.net/api/OnasSurvey",
         })
         .post("/OnasResponse", {
           personId: data.personId,
