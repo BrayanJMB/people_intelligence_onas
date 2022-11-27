@@ -64,8 +64,8 @@ export default function Home() {
         </h3>
         <p>
           Bienvenido a nuestra herramienta de recolección de datos para el
-          desarrollo del análisis de redes organizacionales que People Intelligence
-          está desarrollando para
+          desarrollo del análisis de redes organizacionales que People
+          Intelligence está desarrollando para
           <strong className={styles.red + " " + styles.top}>
             {" "}
             {data?.empresa}{" "}
@@ -73,13 +73,13 @@ export default function Home() {
         </p>
         <p className={styles.top}>
           A continuación te formularemos{" "}
-          <strong style={{ fontWeight: "bold" }}>siete</strong> preguntas, que te
-          tomaran alrededor de 10 minutos responder.
+          <strong style={{ fontWeight: "bold" }}>siete</strong> preguntas, que
+          te tomaran alrededor de 10 minutos responder.
         </p>
         <p className={styles.top}>
-        Esta información nos ayudará a entender las redes
-        internas de interaccióny nos permitirá definir acciones
-        para fortalecer el trabajo colaborativo en la organización.
+          Esta información nos ayudará a entender las redes internas de
+          interaccióny nos permitirá definir acciones para fortalecer el trabajo
+          colaborativo en la organización.
         </p>
         <div className={styles.bullets}>
           <span className={styles.active}></span>
