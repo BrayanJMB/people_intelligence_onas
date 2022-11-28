@@ -48,7 +48,7 @@ export default function Questions() {
   const [success, setSuccess] = useState(false);
   const [questions, setQuestions] = useState(
     Array(data.length).fill({
-      questionId: "",
+      questionId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       general: Array(4).fill({
         name: "",
         frecuency: "",
@@ -58,10 +58,6 @@ export default function Questions() {
       }),
     })
   );
-  let tmp = questions.map((val, index) => {
-    return { ...val, questionId: index };
-  });
-  setQuestions(tmp);
 
   const handledata = useCallback(
     (key, row) => (event) => {
@@ -172,7 +168,10 @@ export default function Questions() {
       navigate("/thanks");
     }
     if (success) {
-      navigate("/connexion", { state: questions });
+      let tmp = questions.map((val, index) => {
+        return { ...val, questionId: index };
+      });
+      navigate("/connexion", { state: tmp });
     }
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
