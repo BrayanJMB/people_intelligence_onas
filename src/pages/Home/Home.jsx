@@ -17,11 +17,28 @@ export default function Home() {
   const [success, setSuccess] = useState(false);
   const location = useLocation();
   let { code } = queryString.parse(location.search);
-  if (!code) {
-    navigate("/thanks");
-  }
+
   let personId = code?.split("/")[0];
   let versionId = code?.split("/")[1];
+
+  const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
+  if (!code) {
+    if (!dataCookie) {
+      navigate("/thanks");
+    } else {
+      personId = dataCookie.personId;
+      versionId = dataCookie.versionId;
+    }
+  }
+  if (!dataCookie) {
+    localStorage.setItem(
+      "dataCookie",
+      JSON.stringify({
+        personId: personId,
+        versionId: versionId,
+      })
+    );
+  }
 
   const verify = async () => {
     try {
