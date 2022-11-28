@@ -171,27 +171,36 @@ export default function Connexion() {
                         <InfoIcon style={{ color: "black" }} />
                       </IconButton>
                       <TableRow>
-                        {val.data.map((val, key2) => {
-                          return (
-                            <TableCell
-                              key={key2}
-                              align="center"
-                              style={{
-                                fontSize: "0.55rem",
-                                color: "grey",
-                                fontWeight: "bold",
-                                border: "none",
-                              }}
-                              sx={{
-                                width: "29.8%",
-                                padding: "0.3rem",
-                                border: "none",
-                              }}
-                            >
-                              {val}
-                            </TableCell>
-                          );
-                        })}
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: "3.5em",
+                          }}
+                        >
+                          {val.data.map((val, key2) => {
+                            return (
+                              <TableCell
+                                key={key2}
+                                align="center"
+                                style={{
+                                  fontSize: "0.55rem",
+                                  color: "grey",
+                                  fontWeight: "bold",
+                                  border: "none",
+                                  margin: "0 2em",
+                                }}
+                                sx={{
+                                  width: "29.8%",
+                                  padding: "0.3rem",
+                                  border: "none",
+                                }}
+                              >
+                                {val}
+                              </TableCell>
+                            );
+                          })}
+                        </div>
                       </TableRow>
                     </TableCell>
                   );
