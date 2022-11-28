@@ -169,7 +169,7 @@ export default function Questions() {
     }
     if (success) {
       let tmp = questions.map((val, index) => {
-        return { ...val, questionId: index };
+        return { ...val, questionId: index + 1 };
       });
       navigate("/connexion", { state: tmp });
     }
