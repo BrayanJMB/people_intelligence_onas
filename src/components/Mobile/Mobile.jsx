@@ -105,6 +105,7 @@ export default function Mobile(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
   const [employe, setEmploye] = useState([]);
+  const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
 
   const getemploye = async () => {
     await axios
@@ -112,7 +113,7 @@ export default function Mobile(props) {
         baseURL:
           "https://peopleintelligenceapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
       })
-      .get("1/5f244111-b80a-421a-b11d-ea59e8156fde", config)
+      .get(`${dataCookie.personId}/${dataCookie.versionId}`, config)
       .then((res) => {
         let filter = [];
         res.data.map((val, key) => {

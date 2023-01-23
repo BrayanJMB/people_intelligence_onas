@@ -21,24 +21,19 @@ export default function Home() {
   let personId = code?.split("/")[0];
   let versionId = code?.split("/")[1];
 
-  const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
-  if (!code) {
-    if (!dataCookie) {
-      navigate("/thanks");
-    } else {
-      personId = dataCookie.personId;
-      versionId = dataCookie.versionId;
-    }
+  let dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
+  if (!code && !dataCookie) {
+    navigate("/thanks");
   }
-  if (!dataCookie) {
-    localStorage.setItem(
-      "dataCookie",
-      JSON.stringify({
-        personId: personId,
-        versionId: versionId,
-      })
-    );
-  }
+
+  localStorage.setItem(
+    "dataCookie",
+    JSON.stringify({
+      personId: personId,
+      versionId: versionId,
+    })
+  );
+  dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
 
   const verify = async () => {
     try {

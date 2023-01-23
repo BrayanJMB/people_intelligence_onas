@@ -106,6 +106,7 @@ export default function Desktop(props) {
   const [checked, setChecked] = useState(false);
   const [employe, setEmploye] = useState([]);
   const paginationRefs = useRef([]);
+  const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
 
   const getemploye = async () => {
     await axios
@@ -113,7 +114,7 @@ export default function Desktop(props) {
         baseURL:
           "https://peopleintelligenceapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
       })
-      .get("1/5f244111-b80a-421a-b11d-ea59e8156fde", config)
+      .get(`${dataCookie.personId}/${dataCookie.versionId}`, config)
       .then((res) => {
         let filter = [];
         res.data.map((val, key) => {
