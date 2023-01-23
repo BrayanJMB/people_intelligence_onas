@@ -25,7 +25,7 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
-
+import queryString from "query-string";
 const data = [
   {
     title: "Relación Frecuente:",
@@ -106,6 +106,9 @@ export default function Desktop(props) {
   const [checked, setChecked] = useState(false);
   const [employe, setEmploye] = useState([]);
   const paginationRefs = useRef([]);
+  const [dataCookie, setDataCookie] = useState(JSON.parse(localStorage.getItem("dataCookie")));
+  const personId = dataCookie.personId;
+  const versionId = dataCookie.versionId;
 
   const getemploye = async () => {
     await axios
@@ -113,7 +116,7 @@ export default function Desktop(props) {
         baseURL:
           "https://peopleintelligenceapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
       })
-      .get("1/5f244111-b80a-421a-b11d-ea59e8156fde", config)
+      .get(`${personId}/${versionId}`, config)
       .then((res) => {
         let filter = [];
         res.data.map((val, key) => {
