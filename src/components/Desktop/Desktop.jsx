@@ -106,6 +106,7 @@ export default function Desktop(props) {
   const [checked, setChecked] = useState(false);
   const [employe, setEmploye] = useState([]);
   const paginationRefs = useRef([]);
+  localStorage.clear()
   const [dataCookie, setDataCookie] = useState(JSON.parse(localStorage.getItem("dataCookie")));
   const personId = dataCookie.personId;
   const versionId = dataCookie.versionId;
