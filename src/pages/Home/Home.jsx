@@ -20,7 +20,7 @@ export default function Home() {
 
   let personId = code?.split("/")[0];
   let versionId = code?.split("/")[1];
-  localStorage.removeItem("dataCookie");
+  localStorage.clear();
   const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
   if (!code) {
     if (!dataCookie) {
