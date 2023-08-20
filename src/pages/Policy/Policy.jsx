@@ -131,7 +131,7 @@ export default function Policy() {
               incluye análisis de tendencias, productos y servicios personalizados, evaluación de
               riesgos y análisis de costos y cargos relacionados con nuestros servicios y
               soluciones.<br></br><br></br>
-              “Dato Personal”: cualquier información vinculada o que puedaasociarse a una o
+              “Dato Personal”: cualquier información vinculada o que pueda asociarse a una o
               varias personas naturales determinadas o determinables.<br></br><br></br>
 
               “Dato personal privado”: dato que por su naturaleza íntima o reservada sólo es
@@ -1154,7 +1154,7 @@ export default function Policy() {
           exclusivamente el desarrollo de este ejercicio.
         </p>
         <p className={styles.top}>
-          Para conocer mas acerca de nuestra política de tratamiento de datos
+          Para conocer más acerca de nuestra política de tratamiento de datos
           puede hacer clic en el siguiente{" "}
           <strong
             style={{

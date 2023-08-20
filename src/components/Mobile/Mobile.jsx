@@ -79,7 +79,7 @@ const info = [
     title: "Agilidad :",
     data: [
       "Con oportunidad de mejora",
-      "Cumple Expectativas",
+      "Cumple expectativas",
       "Por encima de las expectativas",
     ],
   },
@@ -87,7 +87,7 @@ const info = [
     title: "Calidad :",
     data: [
       "Con oportunidad de mejora",
-      "Cumple Expectativas",
+      "Cumple expectativas",
       "Por encima de las expectativas",
     ],
   },

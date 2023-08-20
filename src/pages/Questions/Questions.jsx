@@ -4,6 +4,8 @@ import Mobile from "../../components/Mobile/Mobile";
 import Desktop from "../../components/Desktop/Desktop";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
+import axios from "axios";
+
 //import * as uuid from "uuid";
 
 const data = [
@@ -12,6 +14,7 @@ const data = [
     question:
       "1. ¿Cuándo necesitas ayuda en tus responsabilidades a qué personas acudes?",
   },
+
   {
     title: "Relación Información:",
     question:
@@ -46,9 +49,10 @@ export default function Questions() {
   const companyInfo = JSON.parse(localStorage.getItem("companyInfo"));
   const [width, setWidth] = useState(window.innerWidth);
   const [success, setSuccess] = useState(false);
+  const urlInfo = JSON.parse(localStorage.getItem("urlInfo"));
   const [questions, setQuestions] = useState(
     Array(data.length).fill({
-      questionId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      questionId: 0,
       general: Array(4).fill({
         name: "",
         frecuency: "",
@@ -59,7 +63,7 @@ export default function Questions() {
     })
   );
 
-  const handledata = useCallback(
+  const handleData = useCallback(
     (key, row) => (event) => {
       let prop = event.target.name;
       let tmp = questions.map((item, i) => {
@@ -81,7 +85,7 @@ export default function Questions() {
     [questions]
   );
 
-  const handleadd = useCallback(
+  const handleAdd = useCallback(
     (key) => {
       let tmp = questions.map((item, i) => {
         if (key === i) {
@@ -103,7 +107,7 @@ export default function Questions() {
     [questions]
   );
 
-  const handledelete = useCallback(
+  const handleDelete = useCallback(
     (key) => {
       let tmp = questions.map((item, i) => {
         if (key === i) {
@@ -119,7 +123,7 @@ export default function Questions() {
     [questions]
   );
 
-  const handleselect = useCallback(
+  const handleSelect = useCallback(
     (key, index, value) => {
       let prop = "name";
       let tmp = questions.map((item, i) => {
@@ -141,37 +145,37 @@ export default function Questions() {
     [questions]
   );
 
-  const next = () => {
-    let filter = questions.map((item, index) => {
-      let tmp = [];
-      for (let i of item.general) {
-        if (
-          i.name.length !== 0 &&
-          i.frecuency.length !== 0 &&
-          i.agility.length !== 0 &&
-          i.quality.length !== 0 &&
-          i.closeness.length !== 0
-        ) {
-          tmp.push(i);
-        }
-      }
-      //, questionId: 1234567
-      //uuid.v4()
-      return { ...item, general: tmp, questionId: index + 1 };
-    });
-    setSuccess(true);
-    setQuestions(filter);
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const data = {
+      personId: urlInfo.personId,
+      companyId: companyInfo.idcompany,
+      surveyId: urlInfo.versionId,
+      questions: questions,
+    };
+    try {
+      const response = await axios
+        .create({
+          baseURL:
+            "https://peopleintelligenceapi.azurewebsites.net/api/OnasSurvey",
+        })
+        .post("/OnasResponse", {
+          personId: data.personId,
+          companyId: data.companyId,
+          surveyId: data.surveyId,
+          questions: data.questions,
+          conexion: data.conexion,
+        });
+      console.log(response);
+      navigate("/thanks");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     if (!companyInfo) {
       navigate("/thanks");
-    }
-    if (success) {
-      let tmp = questions.map((val, index) => {
-        return { ...val, questionId: index + 1 };
-      });
-      navigate("/connexion", { state: tmp });
     }
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener("resize", handleWindowResize);
@@ -186,20 +190,21 @@ export default function Questions() {
       {width > breakPoint ? (
         <Desktop
           questions={questions}
-          handleData={handledata}
-          handleAdd={handleadd}
-          handleDelete={handledelete}
-          handleSelect={handleselect}
-          Next={next}
+          setQuestions={setQuestions}
+          handleData={handleData}
+          handleAdd={handleAdd}
+          handleDelete={handleDelete}
+          handleSelect={handleSelect}
+          Next={submitHandler}
         />
       ) : (
         <Mobile
           questions={questions}
-          handleData={handledata}
-          handleAdd={handleadd}
-          handleDelete={handledelete}
-          handleSelect={handleselect}
-          Next={next}
+          handleData={handleData}
+          handleAdd={handleAdd}
+          handleDelete={handleDelete}
+          handleSelect={handleSelect}
+          Next={submitHandler}
         />
       )}
     </div>

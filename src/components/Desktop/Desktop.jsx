@@ -38,7 +38,7 @@ const data = [
       "2. Cuando necesitas información para el desarrollo de tus funciones, ¿a quién(es) acudes?",
   },
   {
-    title: "Relación de Orientación / Confianza / Consejería / Mentoría::",
+    title: "Relación de Orientación / Confianza / Consejería / Mentoría:",
     question:
       "3. Cuando necesitas guía o consejos en el trabajo, ¿a quién(es) buscas?",
   },
@@ -74,7 +74,7 @@ const info = [
     title: "Agilidad",
     data: [
       "Por encima de las expectativas",
-      "Cumple Expectativas",
+      "Cumple expectativas",
       "Por debajo de las expectativas",
     ],
   },
@@ -82,7 +82,7 @@ const info = [
     title: "Calidad",
     data: [
       "Por encima de las expectativas",
-      "Cumple Expectativas",
+      "Cumple expectativas",
       "Por debajo de las expectativas",
     ],
   },
@@ -90,7 +90,7 @@ const info = [
     title: "Cercanía",
     data: [
       "Relación Fluída",
-      "Relación Estrictamente laboral",
+      "Relación estrictamente laboral",
       "Relación con fricciones",
     ],
   },
@@ -107,8 +107,12 @@ export default function Desktop(props) {
   const [employe, setEmploye] = useState([]);
   const paginationRefs = useRef([]);
   const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const autoCompleteRefs = useRef({});
+  const radioGroupRefs = useRef({});
+  const [errors, setErrors] = useState({});
 
-  const getemploye = async () => {
+  const getEmployee = async () => {
     await axios
       .create({
         baseURL:
@@ -145,32 +149,83 @@ export default function Desktop(props) {
     }
   };
 
-  const checkquestions = () => {
-    let fail = false;
-    for (let question of props.questions) {
-      if (
-        question.general[0].name.length === 0 ||
-        question.general[0].frecuency.length === 0 ||
-        question.general[0].agility.length === 0 ||
-        question.general[0].quality.length === 0 ||
-        question.general[0].closeness.length === 0
-      ) {
-        fail = true;
-        break;
+  const validateAndFocus = () => {
+    let hasErrors = false;
+    const newErrors = {};
+
+    for (let key1 = 0; key1 < data.length; key1++) {
+      const questionSection = props.questions[key1].general;
+      let sectionHasError = false;
+
+      for (let index = 0; index < questionSection.length; index++) {
+        const selectedValue = questionSection[index].name;
+        if (!selectedValue) {
+          newErrors[`${key1}-${index}`] = true;
+          sectionHasError = true;
+
+          if (!hasErrors) {
+            if (autoCompleteRefs.current[`${key1}-${index}`]) {
+              autoCompleteRefs.current[`${key1}-${index}`].scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }
+            hasErrors = true; // Mueve esta línea aquí
+          }
+        }
+
+        for (let key4 = 0; key4 < info.length; key4++) {
+          const selectedRadioValue = questionSection[index][name[key4]];
+          if (!selectedRadioValue) {
+            newErrors[`${key1}-${index}-${key4}`] = true;
+            sectionHasError = true;
+            if (!hasErrors) {
+              // Verifica nuevamente aquí para los radios
+              if (radioGroupRefs.current[`${key1}-${index}-${key4}`]) {
+                radioGroupRefs.current[
+                  `${key1}-${index}-${key4}`
+                ].scrollIntoView({
+                  behavior: "smooth",
+                  block: "center",
+                });
+              }
+              hasErrors = true;
+            }
+          }
+        }
+      }
+
+      if (sectionHasError) {
+        newErrors[`${key1}`] = true; // Marca toda la sección con error
       }
     }
-    if (fail === true) {
-      setChecked(false);
+
+    setErrors(newErrors);
+    return !hasErrors;
+  };
+
+  const handleSubmit = (e) => {
+    if (validateAndFocus()) {
+      console.log("melos");
+      props.Next(e);
     } else {
-      setChecked(true);
+      console.log("error");
     }
   };
 
+  const updateQuestionsWithId = () => {
+    const updatedQuestions = props.questions.map((question, index) => {
+      return { ...question, questionId: index + 1 };
+    });
+    props.setQuestions(updatedQuestions);
+  };  
+
   useEffect(() => {
     if (employe.length === 0) {
-      getemploye();
+      getEmployee();
+    } else {
+      updateQuestionsWithId();
     }
-    checkquestions();
   }, [props.questions]);
 
   return (
@@ -262,18 +317,55 @@ export default function Desktop(props) {
                         >
                           <Autocomplete
                             id="combo-box-demo"
-                            options={employe}
+                            options={employe.filter((emp) => {
+                              const namesInCurrentSection = props.questions[
+                                key1
+                              ].general.map((q) => q.name);
+                              const isNameSelectedInCurrentSection =
+                                namesInCurrentSection.includes(emp);
+                              return (
+                                !isNameSelectedInCurrentSection ||
+                                emp ===
+                                  props.questions[key1].general[index].name
+                              );
+                            })}
                             clearOnEscape
                             value={props.questions[key1].general[index].name}
                             onChange={(event, value) => {
+                              const currentSelected = [...selectedEmployees];
+
+                              const oldVal =
+                                props.questions[key1].general[index].name;
+                              if (oldVal) {
+                                const oldIndex =
+                                  currentSelected.indexOf(oldVal);
+                                if (oldIndex > -1) {
+                                  currentSelected.splice(oldIndex, 1);
+                                }
+                              }
+
+                              if (value) {
+                                currentSelected.push(value);
+                              }
+
+                              setSelectedEmployees(currentSelected);
                               props.handleSelect(key1, index, value);
                             }}
                             isOptionEqualToValue={(option, value) =>
                               option.id === value.id
                             }
-                            noOptionsText={"No Employe Found"}
+                            noOptionsText={"No se encuentran empleados"}
                             renderInput={(params) => (
-                              <TextField {...params} label="Name" />
+                              <TextField
+                                {...params}
+                                label="Nombre empleado"
+                                error={!!errors[`${key1}-${index}`]}
+                                inputRef={(el) =>
+                                  (autoCompleteRefs.current[
+                                    `${key1}-${index}`
+                                  ] = el)
+                                }
+                              />
                             )}
                           />
                         </TableCell>
@@ -291,7 +383,14 @@ export default function Desktop(props) {
                               }}
                               key={key4}
                             >
-                              <FormControl style={{ width: "100%" }}>
+                              <FormControl
+                                style={{ width: "100%", color: "green" }}
+                                ref={(el) =>
+                                  (radioGroupRefs.current[
+                                    `${key1}-${index}-${key4}`
+                                  ] = el)
+                                }
+                              >
                                 <RadioGroup
                                   row
                                   aria-labelledby="demo-row-radio-buttons-group-label"
@@ -319,6 +418,11 @@ export default function Desktop(props) {
                                               "& .MuiSvgIcon-root": {
                                                 fontSize: 16,
                                               },
+                                              color: errors[
+                                                `${key1}-${index}-${key4}`
+                                              ]
+                                                ? "red"
+                                                : "",
                                             }}
                                           />
                                         }
@@ -369,7 +473,7 @@ export default function Desktop(props) {
                   props.handleDelete(key1);
                 }}
               >
-                Delete
+                Eliminar
               </Button>
             )}
           </div>
@@ -377,13 +481,11 @@ export default function Desktop(props) {
       })}
 
       <div className={styles.move}>
-        {checked && (
-          <IconButton aria-label="next" color="info" onClick={props.Next}>
-            <ArrowCircleRightOutlinedIcon
-              style={{ fontSize: 50, color: "black" }}
-            />
-          </IconButton>
-        )}
+        <IconButton aria-label="next" color="info" onClick={(e) => {handleSubmit(e)}}>
+          <ArrowCircleRightOutlinedIcon
+            style={{ fontSize: 50, color: "black" }}
+          />
+        </IconButton>
       </div>
       <div className={styles.bullets}>
         <span></span>
