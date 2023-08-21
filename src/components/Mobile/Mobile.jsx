@@ -111,7 +111,7 @@ export default function Mobile(props) {
     await axios
       .create({
         baseURL:
-          "https://peopleintelligenceapi.azurewebsites.net/api/ONasSurvey/EmpleadosSurveyOnas/",
+          `${process.env.REACT_APP_API_URL}ONasSurvey/EmpleadosSurveyOnas/`,
       })
       .get(`${dataCookie.personId}/${dataCookie.versionId}`, config)
       .then((res) => {

@@ -40,7 +40,7 @@ export default function Home() {
       await axios
         .create({
           baseURL:
-            "https://peopleintelligenceapi.azurewebsites.net/api/OnasSurvey/",
+            `${process.env.REACT_APP_API_URL}OnasSurvey/`,
         })
         .get(`${personId}/${versionId}`, config)
         .then((res) => {
