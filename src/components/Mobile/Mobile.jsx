@@ -23,6 +23,10 @@ import ArrowDropDownCircleIcon from "@mui/icons-material/ArrowDropDownCircle";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
+import SkipNextIcon from "@mui/icons-material/SkipNext";
 import axios from "axios";
 
 const data = [
@@ -55,6 +59,10 @@ const data = [
     title: "Relación Last",
     question:
       "6. Cuándo te necesitan o te contactan, ¿generalmente que personas son y que tipo de interacción es?",
+  },
+  {
+    title: "Otra pregunta",
+    question: "7. Aquí iria texto pregunta",
   },
 ];
 
@@ -115,6 +123,17 @@ export default function Mobile(props) {
   // Refs para los Accordions
   const accordionRefs = useRef(data.map(() => createRef()));
 
+  const isAccordionCompleteBasedOnValue = (question) => {
+    if (!question.name) return false;
+
+    const fields = ["frecuency", "agility", "quality", "closeness"];
+    for (let field of fields) {
+      if (!question[field]) return false;
+    }
+
+    return true;
+  };
+
   const getemploye = async () => {
     await axios
       .create({
@@ -144,32 +163,34 @@ export default function Mobile(props) {
     return skipped.has(step);
   };
 
+  const updateQuestionsWithId = () => {
+    const updatedQuestions = props.questions.map((question, index) => {
+      return { ...question, questionId: index + 1 };
+    });
+    props.setQuestions(updatedQuestions);
+  };
+
+  const accordionHasErrors = (index) => {
+    const fields = ["frecuency", "agility", "quality", "closeness"];
+    return fields.some((field) => Boolean(errors[`${field}-${index}`]));
+  };
+
   const validateCurrentStep = (step) => {
     let validationErrors = {};
-    for (let i = 0; i < questionsState[step].general.length; i++) {
-      // Validación para los dos primeros siempre
-      if (!questionsState[step].general[i].name) {
+    console.log(props.questions[step]);
+    for (let i = 0; i < props.questions[step].general.length; i++) {
+      const currentQuestion = props.questions[step].general[i];
+
+      // Validación para el campo "name"
+      if (!currentQuestion.name) {
         validationErrors[`autocomplete-${i}`] = "Campo requerido";
       }
-      if (
-        !Object.values(questionsState[step].general[i]).some((value) => value)
-      ) {
-        info.map((value, index) => {
-          validationErrors[`radio-group-${index}`] =
-            "Selecciona al menos una opción";
-        });
-      }
-    }
-
-    // Identificar el primer error y enfocar el Accordion correspondiente
-    for (let i = 0; i < questionsState[step].general.length; i++) {
-      if (
-        validationErrors[`autocomplete-${i}`] ||
-        validationErrors[`radio-${i}`]
-      ) {
-        accordionRefs.current[i].current.focus(); // Enfocar al Accordion con error
-
-        break; // Salir del bucle una vez que se encuentre el primer error
+      // Validación para los campos "frecuency", "agility", "quality" y "closeness"
+      const fields = ["frecuency", "agility", "quality", "closeness"];
+      for (let field of fields) {
+        if (!currentQuestion[field]) {
+          validationErrors[`${field}-${i}`] = "Campo requerido";
+        }
       }
     }
 
@@ -177,13 +198,19 @@ export default function Mobile(props) {
     return validationErrors;
   };
 
-  const handleNext = (step) => {
-    if (validateCurrentStep(step).length < 0) {
+  const handleNext = (event, step) => {
+    console.log(props.questions);
+    if (Object.keys(validateCurrentStep(step)).length === 0) {
+      if (activeStep === props.questions.length - 1) {
+        props.Next(event);
+        return;
+      }
       let newSkipped = skipped;
       if (isStepSkipped(activeStep)) {
         newSkipped = new Set(newSkipped.values());
         newSkipped.delete(activeStep);
       }
+
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
       setSkipped(newSkipped);
     }
@@ -203,9 +230,29 @@ export default function Mobile(props) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const areQuestionsUpdated = () => {
+    return props.questions.every((question) => question.questionId);
+  };
+
+  useEffect(() => {
+    props.questions[activeStep].general.forEach(
+      (currentQuestion, currentIndex) => {
+        if (isAccordionCompleteBasedOnValue(currentQuestion)) {
+          handleAccordionToggle(currentIndex, false); // Cierra el acordeón
+        }
+      }
+    );
+  }, [props.questions[activeStep].general]);
+
   useEffect(() => {
     if (employe.length === 0) {
       getemploye();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!areQuestionsUpdated()) {
+      updateQuestionsWithId();
     }
   }, [props.questions]);
 
@@ -256,11 +303,22 @@ export default function Mobile(props) {
                 <h3 style={{ fontWeight: "bold" }}>{data[activeStep].title}</h3>
                 <p>{data[activeStep].question}</p>
                 {props.questions[activeStep].general.map((row, index) => {
+                  console.log(props.questions[activeStep].general);
+                  const selectedNames = props.questions[activeStep].general.map(
+                    (question) => question.name
+                  );
+
+                  const filteredEmploye = employe.filter(
+                    (empName) => !selectedNames.includes(empName)
+                  );
                   return (
                     <Accordion
                       key={index}
                       ref={accordionRefs.current[index]}
-                      expanded={openAccordions.includes(index)}
+                      expanded={
+                        openAccordions.includes(index) ||
+                        accordionHasErrors(index)
+                      }
                       onChange={(event, isExpanded) =>
                         handleAccordionToggle(index, isExpanded)
                       }
@@ -275,15 +333,25 @@ export default function Mobile(props) {
                         id={index}
                       >
                         <div className={styles.input}>
-                          <h5>Nombre Empleado</h5>
+                          <h5>
+                            Nombre Empleado
+                            {isAccordionCompleteBasedOnValue(
+                              props.questions[activeStep].general[index]
+                            ) && (
+                              <CheckCircleOutlineIcon
+                                style={{ color: "green", marginLeft: "10px" }}
+                              />
+                            )}
+                          </h5>
                           <Autocomplete
                             id="combo-box-demo"
-                            options={employe}
+                            options={filteredEmploye}
                             clearOnEscape
                             value={
                               props.questions[activeStep].general[index].name
                             }
                             onChange={(event, value) => {
+                              event.stopPropagation();
                               props.handleSelect(activeStep, index, value);
                             }}
                             isOptionEqualToValue={(option, value) =>
@@ -293,9 +361,16 @@ export default function Mobile(props) {
                             noOptionsText={"Empleados no encontrados"}
                             renderInput={(params) => (
                               <TextField
+                                onClick={(event) => {
+                                  event.stopPropagation(); // Esto detiene la propagación del evento de clic
+                                }}
                                 {...params}
                                 label="Nombre Empleado"
-                                error={Boolean(errors[`autocomplete-${index}`])}
+                                error={
+                                  Boolean(errors[`autocomplete-${index}`]) &&
+                                  !props.questions[activeStep].general[index]
+                                    .name
+                                }
                               />
                             )}
                           />
@@ -307,21 +382,38 @@ export default function Mobile(props) {
                             return (
                               <div key={key} className={styles.option}>
                                 <div className={styles.title}>{val.title}</div>
-                                <FormControl
-                                  style={{
-                                    color: Boolean(errors[`radio-group-${key}`])
-                                      ? "red"
-                                      : "default",
-                                  }}
-                                >
+                                <FormControl>
                                   <RadioGroup
                                     row
                                     aria-labelledby="demo-row-radio-buttons-group-label"
                                     name="row-radio-buttons-group"
-                                    onChange={props.handleData(
-                                      activeStep,
-                                      index
-                                    )}
+                                    onChange={(event) => {
+                                      // Creamos una copia del objeto currentQuestion de este índice específico
+                                      const updatedQuestion = {
+                                        ...props.questions[activeStep].general[
+                                          index
+                                        ],
+                                      };
+
+                                      // Aplicamos el cambio basado en el evento al objeto copiado.
+                                      updatedQuestion[event.target.name] =
+                                        event.target.value;
+
+                                      // Usamos la función modificada para verificar el objeto copiado.
+                                      if (
+                                        isAccordionCompleteBasedOnValue(
+                                          updatedQuestion
+                                        )
+                                      ) {
+                                        handleAccordionToggle(index, false); // Cierra el acordeón
+                                      }
+
+                                      // Luego, procedemos a actualizar el estado como normalmente lo haces.
+                                      props.handleData(
+                                        activeStep,
+                                        index
+                                      )(event);
+                                    }}
                                     value={
                                       props.questions[activeStep].general[
                                         index
@@ -331,6 +423,13 @@ export default function Mobile(props) {
                                       justifyContent: "flex-start",
                                       columnGap: "1rem",
                                       width: "100%",
+                                      color:
+                                        errors[`${name[key]}-${index}`] &&
+                                        !props.questions[activeStep].general[
+                                          index
+                                        ][name[key]]
+                                          ? "red"
+                                          : "default",
                                     }}
                                   >
                                     {val.data.map((value, key5) => {
@@ -363,62 +462,80 @@ export default function Mobile(props) {
                     </Accordion>
                   );
                 })}
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    marginTop: "15px",
+                  }}
+                >
+                  {props.questions[activeStep].general.length < 10 && (
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      style={{
+                        fontWeight: "bold",
+                        backgroundColor: "green",
+                      }}
+                      onClick={() => {
+                        props.handleAdd(activeStep);
+                      }}
+                    >
+                      Agregar
+                    </Button>
+                  )}
+                  {props.questions[activeStep].general.length > 1 && (
+                    <Button
+                      variant="contained"
+                      startIcon={<DeleteIcon />}
+                      color="error"
+                      onClick={() => {
+                        props.handleDelete(activeStep);
+                      }}
+                    >
+                      Eliminar
+                    </Button>
+                  )}
+                </Box>
               </CardContent>
             </Card>
             <Box
               sx={{
                 display: "flex",
-                flexDirection: "row",
-                padding: 2,
                 justifyContent: "space-around",
+                marginTop: "15px",
               }}
             >
-              <Button
-                variant="contained"
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-              >
-                Anterior pregunta
-              </Button>
-              {props.questions[activeStep].general.length < 10 && (
+              {activeStep !== 0 && (
                 <Button
                   variant="contained"
-                  startIcon={<AddIcon />}
-                  style={{
-                    fontWeight: "bold",
-                    backgroundColor: "green",
-                  }}
-                  onClick={() => {
-                    props.handleAdd(activeStep);
-                  }}
+                  color="inherit"
+                  startIcon={<SkipPreviousIcon />}
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
                 >
-                  Agregar
-                </Button>
-              )}
-
-              {props.questions[activeStep].general.length > 4 && (
-                <Button
-                  variant="contained"
-                  startIcon={<DeleteIcon />}
-                  color="error"
-                  onClick={() => {
-                    props.handleDelete(activeStep);
-                  }}
-                >
-                  Delete
+                  Anterior pregunta
                 </Button>
               )}
 
               <Button
                 variant="contained"
                 color="blue"
+                startIcon={
+                  activeStep === props.questions.length - 1 ? (
+                    ""
+                  ) : (
+                    <SkipNextIcon />
+                  )
+                }
                 style={{ color: "white" }}
-                onClick={() => {
-                  handleNext(activeStep);
+                onClick={(event) => {
+                  handleNext(event, activeStep);
                 }}
               >
-                Siguiente Pregunta
+                {activeStep === props.questions.length - 1
+                  ? "Finalizar"
+                  : "Siguiente Pregunta"}
               </Button>
             </Box>
           </div>
