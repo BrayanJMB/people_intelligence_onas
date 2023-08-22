@@ -153,10 +153,9 @@ export default function Desktop(props) {
       },
     },
   });
-
   const handlePage = (event, value) => {
     let element = paginationRefs.current[value - 1];
-    element.scrollIntoView({ behavior: "smooth",         block: "center", });
+    element.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   const addtopaginationRefs = (el) => {
@@ -171,43 +170,52 @@ export default function Desktop(props) {
 
     for (let key1 = 0; key1 < data.length; key1++) {
       const questionSection = props.questions[key1].general;
-      console.log(questionSection);
       let sectionHasError = false;
 
       for (let index = 0; index < questionSection.length; index++) {
         const selectedValue = questionSection[index].name;
+        if (!selectedValue) {
+          newErrors[`${key1}-${index}`] = true;
+          sectionHasError = true;
 
-        // Validación para las primeras dos filas y las que tienen algún dato seleccionado:
-        if (
-          index < 2 ||
-          selectedValue ||
-          Object.values(questionSection[index]).some((val) => val)
-        ) {
-          if (!selectedValue) {
-            newErrors[`${key1}-${index}`] = true;
-            hasErrors = focusIfFirstError(
-              autoCompleteRefs.current[`${key1}-${index}`],
-              hasErrors
-            );
+          if (!hasErrors) {
+            if (autoCompleteRefs.current[`${key1}-${index}`]) {
+              autoCompleteRefs.current[`${key1}-${index}`].scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              });
+            }
+            hasErrors = true; // Mueve esta línea aquí
           }
+        }
 
-          for (let key4 = 0; key4 < info.length; key4++) {
-            const selectedRadioValue = questionSection[index][name[key4]];
-            if (!selectedRadioValue) {
-              newErrors[`${key1}-${index}-${key4}`] = true;
-              hasErrors = focusIfFirstError(
-                radioGroupRefs.current[`${key1}-${index}-${key4}`],
-                hasErrors
-              );
+        for (let key4 = 0; key4 < info.length; key4++) {
+          const selectedRadioValue = questionSection[index][name[key4]];
+          if (!selectedRadioValue) {
+            newErrors[`${key1}-${index}-${key4}`] = true;
+            sectionHasError = true;
+            if (!hasErrors) {
+              // Verifica nuevamente aquí para los radios
+              if (radioGroupRefs.current[`${key1}-${index}-${key4}`]) {
+                radioGroupRefs.current[
+                  `${key1}-${index}-${key4}`
+                ].scrollIntoView({
+                  behavior: "smooth",
+                  block: "center",
+                });
+              }
+              hasErrors = true;
             }
           }
         }
       }
 
-      if (Object.keys(newErrors).some((key) => key.startsWith(`${key1}-`))) {
-        newErrors[`${key1}`] = true; // Marca los que cumplan con las condiciones con error
+      if (sectionHasError) {
+        newErrors[`${key1}`] = true; // Marca toda la sección con error
       }
     }
+
+    console.log(newErrors);
     setErrors(newErrors);
     return !hasErrors;
   };
@@ -260,7 +268,7 @@ export default function Desktop(props) {
             <Stack id={key1}>
               <ThemeProvider theme={theme}>
                 <Pagination
-                  page={key1 + 1} 
+                  page={key1 + 1}
                   count={data ? data.length : 1}
                   hidePrevButton
                   hideNextButton
@@ -494,7 +502,7 @@ export default function Desktop(props) {
                 Agregar
               </Button>
             )}
-            {props.questions[key1].general.length > 4 && (
+            {props.questions[key1].general.length > 1 && (
               <Button
                 variant="contained"
                 startIcon={<DeleteIcon />}

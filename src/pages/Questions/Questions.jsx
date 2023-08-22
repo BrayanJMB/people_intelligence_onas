@@ -58,7 +58,7 @@ export default function Questions() {
   const [questions, setQuestions] = useState(
     Array(data.length).fill({
       questionId: 0,
-      general: Array(4).fill({
+      general: Array(1).fill({
         name: "",
         frecuency: "",
         agility: "",
