@@ -54,7 +54,7 @@ export default function Questions() {
   const companyInfo = JSON.parse(localStorage.getItem("companyInfo"));
   const [width, setWidth] = useState(window.innerWidth);
   const [success, setSuccess] = useState(false);
-  const urlInfo = JSON.parse(localStorage.getItem("urlInfo"));
+  const urlInfo = JSON.parse(localStorage.getItem("dataCookie"));
   const [questions, setQuestions] = useState(
     Array(data.length).fill({
       questionId: 0,
