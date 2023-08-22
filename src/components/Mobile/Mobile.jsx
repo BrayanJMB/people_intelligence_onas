@@ -28,6 +28,9 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import SkipPreviousIcon from "@mui/icons-material/SkipPrevious";
 import SkipNextIcon from "@mui/icons-material/SkipNext";
 import axios from "axios";
+import Tooltip from "@mui/material/Tooltip";
+import InfoIcon from "@mui/icons-material/Info";
+import IconButton from "@mui/material/IconButton";
 
 const data = [
   {
@@ -76,35 +79,43 @@ const name = ["frecuency", "agility", "quality", "closeness"];
 
 const info = [
   {
-    title: "Frecuencia :",
+    title: "Frecuencia",
+    tooltipMessage:
+      "Se refiere al número de veces en las que te comunicas y/o colaboras con tus colegas en las actividades especificas de la pregunta actual en un período de un mes.",
     data: [
-      "Varias veces por semana",
-      "1 o mas veces a la semana",
-      "1 o mas veces cada 2 semanas",
-      "1 vez al mes",
+      "Diariamente",
+      "Casi todos los días",
+      "Varias veces a la semana",
+      "Varias veces al mes",
     ],
   },
   {
-    title: "Agilidad :",
+    title: "Agilidad",
+    tooltipMessage:
+      "Se refiere a lo rápido y eficientemente que tus colegas responden a las necesidades específicas del tipo de colaboración.",
     data: [
-      "Con oportunidad de mejora",
-      "Cumple expectativas",
       "Por encima de las expectativas",
-    ],
-  },
-  {
-    title: "Calidad :",
-    data: [
-      "Con oportunidad de mejora",
       "Cumple expectativas",
-      "Por encima de las expectativas",
+      "Por debajo de las expectativas",
     ],
   },
   {
-    title: "Cercanía :",
+    title: "Calidad",
+    tooltipMessage:
+      "Se refiere a qué tan buena es la interacción en términos de la claridad de la información que se comparte y la calidad de los datos que necesitas.",
     data: [
-      "Relación Cercana",
-      "Relación Estrictamente laboral",
+      "Por encima de las expectativas",
+      "Cumple expectativas",
+      "Por debajo de las expectativas",
+    ],
+  },
+  {
+    title: "Cercanía",
+    tooltipMessage:
+      "Se refiere a qué tan cercana es la relación con la persona en el listado.",
+    data: [
+      "Relación Fluída",
+      "Relación estrictamente laboral",
       "Relación con fricciones",
     ],
   },
@@ -303,7 +314,6 @@ export default function Mobile(props) {
                 <h3 style={{ fontWeight: "bold" }}>{data[activeStep].title}</h3>
                 <p>{data[activeStep].question}</p>
                 {props.questions[activeStep].general.map((row, index) => {
-                  console.log(props.questions[activeStep].general);
                   const selectedNames = props.questions[activeStep].general.map(
                     (question) => question.name
                   );
@@ -381,7 +391,23 @@ export default function Mobile(props) {
                           {info.map((val, key) => {
                             return (
                               <div key={key} className={styles.option}>
-                                <div className={styles.title}>{val.title}</div>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems:"center"
+                                  }}
+                                >
+                                  <div>{val.title}</div>
+                                  <Tooltip
+                                    title={val.tooltipMessage}
+                                    placement="top"
+                                  >
+                                    <IconButton aria-label="info">
+                                      <InfoIcon style={{ color: "black" }} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </div>
+
                                 <FormControl>
                                   <RadioGroup
                                     row

@@ -72,7 +72,7 @@ const info = [
   {
     title: "Frecuencia",
     tooltipMessage:
-      "Número de veces con la que interactúas en un horizonte de tiempo de un mes",
+      "Se refiere al número de veces en las que te comunicas y/o colaboras con tus colegas en las actividades especificas de la pregunta actual en un período de un mes.",
     data: [
       "Diariamente",
       "Casi todos los días",
@@ -83,7 +83,7 @@ const info = [
   {
     title: "Agilidad",
     tooltipMessage:
-      "Cumplimiento de la expectativa del tiempo de entrega y/o respuesta de los requerimientos",
+      "Se refiere a lo rápido y eficientemente que tus colegas responden a las necesidades específicas del tipo de colaboración.",
     data: [
       "Por encima de las expectativas",
       "Cumple expectativas",
@@ -93,7 +93,7 @@ const info = [
   {
     title: "Calidad",
     tooltipMessage:
-      "Valoración que hace respecto a precisión y entendimiento de los requerimientos",
+      "Se refiere a qué tan buena es la interacción en términos de la claridad de la información que se comparte y la calidad de los datos que necesitas.",
     data: [
       "Por encima de las expectativas",
       "Cumple expectativas",
@@ -103,7 +103,7 @@ const info = [
   {
     title: "Cercanía",
     tooltipMessage:
-      "Nivel de confianza, amistad y cordialidad en la interacción",
+      "Se refiere a qué tan cercana es la relación con la persona en el listado.",
     data: [
       "Relación Fluída",
       "Relación estrictamente laboral",
