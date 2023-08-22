@@ -205,6 +205,7 @@ export default function Questions() {
       ) : (
         <Mobile
           questions={questions}
+          setQuestions={setQuestions}
           handleData={handleData}
           handleAdd={handleAdd}
           handleDelete={handleDelete}
