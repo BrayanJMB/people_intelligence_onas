@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Mobile.module.css";
 import {
   Card,
@@ -106,12 +106,13 @@ export default function Mobile(props) {
   const [skipped, setSkipped] = useState(new Set());
   const [employe, setEmploye] = useState([]);
   const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
+  const [isValid, setIsValid] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const getemploye = async () => {
     await axios
       .create({
-        baseURL:
-          `${process.env.REACT_APP_API_URL}ONasSurvey/EmpleadosSurveyOnas/`,
+        baseURL: `${process.env.REACT_APP_API_URL}ONasSurvey/EmpleadosSurveyOnas/`,
       })
       .get(`${dataCookie.personId}/${dataCookie.versionId}`, config)
       .then((res) => {
@@ -137,14 +138,41 @@ export default function Mobile(props) {
     return skipped.has(step);
   };
 
+  const isEmployeeSelected = (question) => {
+    return question.name !== undefined && question.name !== null;
+  };
+  
+  const hasAnswerSelected = (question) => {
+    // Suponiendo que la respuesta se almacena en una propiedad llamada 'answer' dentro de cada pregunta
+    return question.answer !== undefined && question.answer !== null;
+  };
+  
+  const validateStep = () => {
+    const currentStepQuestions = props.questions[activeStep].general;
+    let newErrors = {};
+    const numberOfAccordionsToCheck = 2;
+  
+    const accordionsToValidate = currentStepQuestions.slice(0, numberOfAccordionsToCheck);
+  
+    const valid = accordionsToValidate.every((q, index) => {
+      if (!isEmployeeSelected(q)) {
+        newErrors[`employee-${index}`] = "REQUERIDO";
+      }
+  
+      if (!hasAnswerSelected(q)) {
+        newErrors[`answer-${index}`] = "REQUERIDO";
+      }
+  
+      return isEmployeeSelected(q) && hasAnswerSelected(q);
+    });
+  
+    setErrors(newErrors);
+    setIsValid(valid);
+  };
+  
+
   const handleNext = (key) => {
-    if (
-      props.questions[key].general[0].name.length !== 0 &&
-      props.questions[key].general[0].frecuency.length !== 0 &&
-      props.questions[key].general[0].agility.length !== 0 &&
-      props.questions[key].general[0].quality.length !== 0 &&
-      props.questions[key].general[0].closeness.length !== 0
-    ) {
+    if (validateStep()) {
       let newSkipped = skipped;
       if (isStepSkipped(activeStep)) {
         newSkipped = new Set(newSkipped.values());
@@ -239,9 +267,13 @@ export default function Mobile(props) {
                               option.id === value.id
                             }
                             style={{ width: "45%", marginRight: "1.8rem" }}
-                            noOptionsText={"No Employe Found"}
+                            noOptionsText={"Empleados no encontrados"}
                             renderInput={(params) => (
-                              <TextField {...params} label="Name" />
+                              <TextField
+                                {...params}
+                                label="Nombre Empleado"
+                                error={Boolean(errors[`answer-${index}`])}
+                              />
                             )}
                           />
                         </div>
@@ -319,7 +351,7 @@ export default function Mobile(props) {
                 disabled={activeStep === 0}
                 onClick={handleBack}
               >
-                Previous Question
+                Anterior pregunta
               </Button>
               {props.questions[activeStep].general.length < 10 && (
                 <Button
@@ -358,7 +390,7 @@ export default function Mobile(props) {
                   handleNext(activeStep);
                 }}
               >
-                Next Question
+                Siguiente Pregunta
               </Button>
             </Box>
           </div>
