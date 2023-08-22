@@ -2,6 +2,9 @@ import React, { useRef, useState, useEffect } from "react";
 import styles from "./Desktop.module.css";
 import InfoIcon from "@mui/icons-material/Info";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+import { useNavigate } from "react-router-dom";
+
 import {
   Pagination,
   Stack,
@@ -25,7 +28,8 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import axios from "axios";
-
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 const data = [
   {
     title: "Relación Frecuente:",
@@ -57,12 +61,18 @@ const data = [
     question:
       "6. ¿Quiénes son las personas que en tu día a día más te buscan para que les colabores con su trabajo?",
   },
+  {
+    title: "Pregunta 7:",
+    question: "7. ¿Aquí iría texto pregunta número 7",
+  },
 ];
 const name = ["frecuency", "agility", "quality", "closeness"];
 
 const info = [
   {
     title: "Frecuencia",
+    tooltipMessage:
+      "Número de veces con la que interactúas en un horizonte de tiempo de un mes",
     data: [
       "Diariamente",
       "Casi todos los días",
@@ -72,6 +82,8 @@ const info = [
   },
   {
     title: "Agilidad",
+    tooltipMessage:
+      "Cumplimiento de la expectativa del tiempo de entrega y/o respuesta de los requerimientos",
     data: [
       "Por encima de las expectativas",
       "Cumple expectativas",
@@ -80,6 +92,8 @@ const info = [
   },
   {
     title: "Calidad",
+    tooltipMessage:
+      "Valoración que hace respecto a precisión y entendimiento de los requerimientos",
     data: [
       "Por encima de las expectativas",
       "Cumple expectativas",
@@ -88,6 +102,8 @@ const info = [
   },
   {
     title: "Cercanía",
+    tooltipMessage:
+      "Nivel de confianza, amistad y cordialidad en la interacción",
     data: [
       "Relación Fluída",
       "Relación estrictamente laboral",
@@ -102,7 +118,9 @@ const config = {
   },
 };
 
+
 export default function Desktop(props) {
+  const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
   const [employe, setEmploye] = useState([]);
   const paginationRefs = useRef([]);
@@ -115,8 +133,7 @@ export default function Desktop(props) {
   const getEmployee = async () => {
     await axios
       .create({
-        baseURL:
-          `${process.env.REACT_APP_API_URL}ONasSurvey/EmpleadosSurveyOnas/`,
+        baseURL: `${process.env.REACT_APP_API_URL}ONasSurvey/EmpleadosSurveyOnas/`,
       })
       .get(`${dataCookie.personId}/${dataCookie.versionId}`, config)
       .then((res) => {
@@ -218,7 +235,7 @@ export default function Desktop(props) {
       return { ...question, questionId: index + 1 };
     });
     props.setQuestions(updatedQuestions);
-  };  
+  };
 
   useEffect(() => {
     if (employe.length === 0) {
@@ -227,6 +244,10 @@ export default function Desktop(props) {
       updateQuestionsWithId();
     }
   }, [props.questions]);
+
+  const handlePrevious = () =>{
+    navigate("/guide-response")
+  }
 
   return (
     <div className={styles.inner_box}>
@@ -249,6 +270,9 @@ export default function Desktop(props) {
             </Stack>
             <h2>{val.title}</h2>
             <p>{val.question}</p>
+            <Typography variant="subtitle2">
+              Por favor seleccione una opción según corresponda
+            </Typography>
             <TableContainer component={Paper} style={{ boxShadow: "none" }}>
               <Table aria-label="simple table">
                 <TableHead>
@@ -273,11 +297,19 @@ export default function Desktop(props) {
                           style={{ fontWeight: "bolder", border: "none" }}
                         >
                           {val.title}
-                          <IconButton aria-label="info">
-                            <InfoIcon style={{ color: "black" }} />
-                          </IconButton>
+                          <Tooltip title={val.tooltipMessage} placement="top">
+                            <IconButton aria-label="info">
+                              <InfoIcon style={{ color: "black" }} />
+                            </IconButton>
+                          </Tooltip>
 
-                          <TableRow>
+                          <TableRow
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
                             {val.data.map((val, key3) => {
                               return (
                                 <TableCell
@@ -481,7 +513,18 @@ export default function Desktop(props) {
       })}
 
       <div className={styles.move}>
-        <IconButton aria-label="next" color="info" onClick={(e) => {handleSubmit(e)}}>
+        <IconButton aria-label="previous" color="info" onClick={handlePrevious}>
+          <ArrowCircleLeftOutlinedIcon
+            style={{ fontSize: 50, color: "black" }}
+          />
+        </IconButton>
+        <IconButton
+          aria-label="next"
+          color="info"
+          onClick={(e) => {
+            handleSubmit(e);
+          }}
+        >
           <ArrowCircleRightOutlinedIcon
             style={{ fontSize: 50, color: "black" }}
           />

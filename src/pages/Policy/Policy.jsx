@@ -20,10 +20,12 @@ export default function Policy() {
 
   const [checked, setChecked] = useState(false);
   const next = () => {
-    navigate("/questions");
+
+    navigate("/guide-response");
   };
   const previous = () => {
-    navigate("/");
+    const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
+    navigate(`/?code=${dataCookie.personId}/${dataCookie.versionId}`);
   };
   const handlechange = () => {
     setChecked(!checked);

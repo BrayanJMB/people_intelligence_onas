@@ -40,6 +40,11 @@ const data = [
     question:
       "6. Cuándo te necesitan o te contactan, ¿generalmente que personas son y que tipo de interacción es?",
   },
+  {
+    title: "Pregunta 7:",
+    question:
+      "7. ¿Aquí iría texto pregunta número 7",
+  },
 ];
 
 const breakPoint = 880;
