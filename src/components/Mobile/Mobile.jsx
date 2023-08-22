@@ -342,7 +342,7 @@ export default function Mobile(props) {
                         aria-controls={index}
                         id={index}
                       >
-                        <div className={styles.input}>
+                        <div className={styles.input} style={{display:"flex", flexDirection:"column"}}>
                           <h5>
                             Nombre Empleado
                             {isAccordionCompleteBasedOnValue(
@@ -363,11 +363,12 @@ export default function Mobile(props) {
                             onChange={(event, value) => {
                               event.stopPropagation();
                               props.handleSelect(activeStep, index, value);
+                              handleAccordionToggle(index, true); 
                             }}
                             isOptionEqualToValue={(option, value) =>
                               option.id === value.id
                             }
-                            style={{ width: "45%", marginRight: "1.8rem" }}
+                            style={{ marginRight: "1rem" }}
                             noOptionsText={"Empleados no encontrados"}
                             renderInput={(params) => (
                               <TextField
@@ -390,7 +391,7 @@ export default function Mobile(props) {
                         <div className={styles.options}>
                           {info.map((val, key) => {
                             return (
-                              <div key={key} className={styles.option}>
+                              <div key={key} className={styles.option} style={{diplay:"flex", flexDirection:"column"}}>
                                 <div
                                   style={{
                                     display: "flex",
