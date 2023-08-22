@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createRef } from "react";
 import styles from "./Mobile.module.css";
 import {
   Card,
@@ -106,8 +107,13 @@ export default function Mobile(props) {
   const [skipped, setSkipped] = useState(new Set());
   const [employe, setEmploye] = useState([]);
   const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
-  const [isValid, setIsValid] = useState(false);
+  // Estados
+  const [questionsState, setQuestionsState] = useState([...props.questions]);
+  const [openAccordions, setOpenAccordions] = useState([]);
   const [errors, setErrors] = useState({});
+
+  // Refs para los Accordions
+  const accordionRefs = useRef(data.map(() => createRef()));
 
   const getemploye = async () => {
     await axios
@@ -138,41 +144,41 @@ export default function Mobile(props) {
     return skipped.has(step);
   };
 
-  const isEmployeeSelected = (question) => {
-    return question.name !== undefined && question.name !== null;
-  };
-  
-  const hasAnswerSelected = (question) => {
-    // Suponiendo que la respuesta se almacena en una propiedad llamada 'answer' dentro de cada pregunta
-    return question.answer !== undefined && question.answer !== null;
-  };
-  
-  const validateStep = () => {
-    const currentStepQuestions = props.questions[activeStep].general;
-    let newErrors = {};
-    const numberOfAccordionsToCheck = 2;
-  
-    const accordionsToValidate = currentStepQuestions.slice(0, numberOfAccordionsToCheck);
-  
-    const valid = accordionsToValidate.every((q, index) => {
-      if (!isEmployeeSelected(q)) {
-        newErrors[`employee-${index}`] = "REQUERIDO";
+  const validateCurrentStep = (step) => {
+    let validationErrors = {};
+    for (let i = 0; i < questionsState[step].general.length; i++) {
+      // Validación para los dos primeros siempre
+      if (!questionsState[step].general[i].name) {
+        validationErrors[`autocomplete-${i}`] = "Campo requerido";
       }
-  
-      if (!hasAnswerSelected(q)) {
-        newErrors[`answer-${index}`] = "REQUERIDO";
+      if (
+        !Object.values(questionsState[step].general[i]).some((value) => value)
+      ) {
+        info.map((value, index) => {
+          validationErrors[`radio-group-${index}`] =
+            "Selecciona al menos una opción";
+        });
       }
-  
-      return isEmployeeSelected(q) && hasAnswerSelected(q);
-    });
-  
-    setErrors(newErrors);
-    setIsValid(valid);
-  };
-  
+    }
 
-  const handleNext = (key) => {
-    if (validateStep()) {
+    // Identificar el primer error y enfocar el Accordion correspondiente
+    for (let i = 0; i < questionsState[step].general.length; i++) {
+      if (
+        validationErrors[`autocomplete-${i}`] ||
+        validationErrors[`radio-${i}`]
+      ) {
+        accordionRefs.current[i].current.focus(); // Enfocar al Accordion con error
+
+        break; // Salir del bucle una vez que se encuentre el primer error
+      }
+    }
+
+    setErrors(validationErrors); // Establecer los errores
+    return validationErrors;
+  };
+
+  const handleNext = (step) => {
+    if (validateCurrentStep(step).length < 0) {
       let newSkipped = skipped;
       if (isStepSkipped(activeStep)) {
         newSkipped = new Set(newSkipped.values());
@@ -180,6 +186,16 @@ export default function Mobile(props) {
       }
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
       setSkipped(newSkipped);
+    }
+  };
+
+  const handleAccordionToggle = (index, isExpanded) => {
+    if (isExpanded) {
+      // Si el Accordion se está abriendo, lo añadimos a openAccordions.
+      setOpenAccordions((prev) => [...prev, index]);
+    } else {
+      // Si el Accordion se está cerrando, lo removemos de openAccordions.
+      setOpenAccordions((prev) => prev.filter((item) => item !== index));
     }
   };
 
@@ -241,7 +257,14 @@ export default function Mobile(props) {
                 <p>{data[activeStep].question}</p>
                 {props.questions[activeStep].general.map((row, index) => {
                   return (
-                    <Accordion key={index}>
+                    <Accordion
+                      key={index}
+                      ref={accordionRefs.current[index]}
+                      expanded={openAccordions.includes(index)}
+                      onChange={(event, isExpanded) =>
+                        handleAccordionToggle(index, isExpanded)
+                      }
+                    >
                       <AccordionSummary
                         expandIcon={
                           <ArrowDropDownCircleIcon
@@ -272,7 +295,7 @@ export default function Mobile(props) {
                               <TextField
                                 {...params}
                                 label="Nombre Empleado"
-                                error={Boolean(errors[`answer-${index}`])}
+                                error={Boolean(errors[`autocomplete-${index}`])}
                               />
                             )}
                           />
@@ -284,7 +307,13 @@ export default function Mobile(props) {
                             return (
                               <div key={key} className={styles.option}>
                                 <div className={styles.title}>{val.title}</div>
-                                <FormControl>
+                                <FormControl
+                                  style={{
+                                    color: Boolean(errors[`radio-group-${key}`])
+                                      ? "red"
+                                      : "default",
+                                  }}
+                                >
                                   <RadioGroup
                                     row
                                     aria-labelledby="demo-row-radio-buttons-group-label"
@@ -313,7 +342,6 @@ export default function Mobile(props) {
                                           className={styles.text}
                                           control={
                                             <Radio
-                                              color="blue"
                                               sx={{
                                                 "& .MuiSvgIcon-root": {
                                                   fontSize: 12,
