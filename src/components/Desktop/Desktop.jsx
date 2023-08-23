@@ -232,16 +232,28 @@ export default function Desktop(props) {
     return hasErrors;
   };
 
-  const handleSubmit = (e) => {
-    if (validateAndFocus()) {
-      console.log("melos");
-      props.Next(e);
-    } else {
-      console.log("error");
-    }
+  const areFieldsFilled = (questions) => {
+    return questions.every((question) => {
+      // Verifica si el campo 'name' del questionario está vacío
+      const isNameSelected =
+        question.name !== null && question.name !== undefined && question.name !== "";
+
+      // Verifica si todos los campos de radio están seleccionados
+      const areRadiosSelected = info.every((val, key) => {
+        return (
+          question[name[key]] !== null && question[name[key]] !== undefined  && question[name[key]] !== ""
+        );
+      });
+
+      return isNameSelected && areRadiosSelected;
+    });
   };
 
-  
+  const handleSubmit = (e) => {
+    if (validateAndFocus()) {
+      props.Next(e);
+    }
+  };
 
   const updateQuestionsWithId = () => {
     const updatedQuestions = props.questions.map((question, index) => {
@@ -251,13 +263,14 @@ export default function Desktop(props) {
   };
 
   useEffect(() => {
-      updateQuestionsWithId();
+    updateQuestionsWithId();
   }, []);
 
   useEffect(() => {
+    console.log(props.questions);
     if (employe.length === 0) {
       getEmployee();
-    } 
+    }
   }, [props.questions]);
 
   const handlePrevious = () => {
@@ -488,39 +501,43 @@ export default function Desktop(props) {
                 </TableBody>
               </Table>
             </TableContainer>
-            {props.questions[key1].general.length < 10 && (
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                style={{
-                  marginLeft: "1.5rem",
-                  marginTop: "2rem",
-                  color: "#00b0f0",
-                  border: "none",
-                  fontWeight: "bold",
-                }}
-                onClick={() => {
-                  props.handleAdd(key1);
-                }}
-              >
-                Agregar
-              </Button>
-            )}
-            {props.questions[key1].general.length > 1 && (
-              <Button
-                variant="contained"
-                startIcon={<DeleteIcon />}
-                color="error"
-                style={{
-                  marginLeft: "3rem",
-                  marginTop: "2rem",
-                }}
-                onClick={() => {
-                  props.handleDelete(key1);
-                }}
-              >
-                Eliminar
-              </Button>
+            {areFieldsFilled(props.questions[key1].general) && (
+              <>
+                {props.questions[key1].general.length < 10 && (
+                  <Button
+                    variant="outlined"  
+                    startIcon={<AddIcon />}
+                    style={{
+                      marginLeft: "1.5rem",
+                      marginTop: "2rem",
+                      color: "#00b0f0",
+                      border: "none",
+                      fontWeight: "bold",
+                    }}
+                    onClick={() => {
+                      props.handleAdd(key1);
+                    }}
+                  >
+                    Agregar
+                  </Button>
+                )}
+                {props.questions[key1].general.length > 1 && (
+                  <Button
+                    variant="contained"
+                    startIcon={<DeleteIcon />}
+                    color="error"
+                    style={{
+                      marginLeft: "3rem",
+                      marginTop: "2rem",
+                    }}
+                    onClick={() => {
+                      props.handleDelete(key1);
+                    }}
+                  >
+                    Eliminar
+                  </Button>
+                )}
+              </>
             )}
           </div>
         );
