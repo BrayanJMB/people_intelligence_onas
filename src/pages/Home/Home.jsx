@@ -12,13 +12,11 @@ const config = {
 };
 
 export default function Home() {
-  console.log("entro")
   const navigate = useNavigate();
   const [data, setData] = useState("");
   const [success, setSuccess] = useState(false);
   const location = useLocation();
   let { code } = queryString.parse(location.search);
-  console.log(code)
   let personId = code?.split("/")[0];
   let versionId = code?.split("/")[1];
 

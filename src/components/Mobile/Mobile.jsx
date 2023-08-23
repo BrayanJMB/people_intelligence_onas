@@ -402,6 +402,8 @@ export default function Mobile(props) {
                                   <Tooltip
                                     title={val.tooltipMessage}
                                     placement="top"
+                                    enterTouchDelay={0}
+                                    leaveTouchDelay={3000}
                                   >
                                     <IconButton aria-label="info">
                                       <InfoIcon style={{ color: "black" }} />
