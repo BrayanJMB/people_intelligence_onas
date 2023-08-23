@@ -236,12 +236,16 @@ export default function Desktop(props) {
     return questions.every((question) => {
       // Verifica si el campo 'name' del questionario está vacío
       const isNameSelected =
-        question.name !== null && question.name !== undefined && question.name !== "";
+        question.name !== null &&
+        question.name !== undefined &&
+        question.name !== "";
 
       // Verifica si todos los campos de radio están seleccionados
       const areRadiosSelected = info.every((val, key) => {
         return (
-          question[name[key]] !== null && question[name[key]] !== undefined  && question[name[key]] !== ""
+          question[name[key]] !== null &&
+          question[name[key]] !== undefined &&
+          question[name[key]] !== ""
         );
       });
 
@@ -505,7 +509,7 @@ export default function Desktop(props) {
               <>
                 {props.questions[key1].general.length < 10 && (
                   <Button
-                    variant="outlined"  
+                    variant="outlined"
                     startIcon={<AddIcon />}
                     style={{
                       marginLeft: "1.5rem",
@@ -521,23 +525,23 @@ export default function Desktop(props) {
                     Agregar
                   </Button>
                 )}
-                {props.questions[key1].general.length > 1 && (
-                  <Button
-                    variant="contained"
-                    startIcon={<DeleteIcon />}
-                    color="error"
-                    style={{
-                      marginLeft: "3rem",
-                      marginTop: "2rem",
-                    }}
-                    onClick={() => {
-                      props.handleDelete(key1);
-                    }}
-                  >
-                    Eliminar
-                  </Button>
-                )}
               </>
+            )}
+            {props.questions[key1].general.length > 1 && (
+              <Button
+                variant="contained"
+                startIcon={<DeleteIcon />}
+                color="error"
+                style={{
+                  marginLeft: "3rem",
+                  marginTop: "2rem",
+                }}
+                onClick={() => {
+                  props.handleDelete(key1);
+                }}
+              >
+                Eliminar
+              </Button>
             )}
           </div>
         );

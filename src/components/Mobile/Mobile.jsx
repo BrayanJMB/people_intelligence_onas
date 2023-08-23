@@ -184,7 +184,10 @@ export default function Mobile(props) {
   const accordionHasErrors = (index) => {
     const fields = ["frecuency", "agility", "quality", "closeness"];
     for (let field of fields) {
-      if (Boolean(errors[`${field}-${index}`]) && Object.keys(errors).length > 1) {
+      if (
+        Boolean(errors[`${field}-${index}`]) &&
+        Object.keys(errors).length > 1
+      ) {
         return true;
       }
     }
@@ -339,7 +342,8 @@ export default function Mobile(props) {
                       key={index}
                       ref={accordionRefs.current[index]}
                       expanded={
-                        accordionHasErrors(index) || openAccordions.includes(index)
+                        accordionHasErrors(index) ||
+                        openAccordions.includes(index)
                       }
                       onChange={(event, isExpanded) =>
                         handleAccordionToggle(index, isExpanded)
@@ -379,7 +383,7 @@ export default function Mobile(props) {
                               event.stopPropagation();
                               props.handleSelect(activeStep, index, value);
                               handleAccordionToggle(index, true);
-                              validateCurrentStep(activeStep)
+                              validateCurrentStep(activeStep);
                             }}
                             isOptionEqualToValue={(option, value) =>
                               option.id === value.id
@@ -465,7 +469,7 @@ export default function Mobile(props) {
                                         activeStep,
                                         index
                                       )(event);
-                                      validateCurrentStep(activeStep)
+                                      validateCurrentStep(activeStep);
                                     }}
                                     value={
                                       props.questions[activeStep].general[
@@ -540,19 +544,19 @@ export default function Mobile(props) {
                         Agregar
                       </Button>
                     )}
-                    {props.questions[activeStep].general.length > 1 && (
-                      <Button
-                        variant="contained"
-                        startIcon={<DeleteIcon />}
-                        color="error"
-                        onClick={() => {
-                          props.handleDelete(activeStep);
-                        }}
-                      >
-                        Eliminar
-                      </Button>
-                    )}
                   </Box>
+                )}
+                {props.questions[activeStep].general.length > 1 && (
+                  <Button
+                    variant="contained"
+                    startIcon={<DeleteIcon />}
+                    color="error"
+                    onClick={() => {
+                      props.handleDelete(activeStep);
+                    }}
+                  >
+                    Eliminar
+                  </Button>
                 )}
               </CardContent>
             </Card>
