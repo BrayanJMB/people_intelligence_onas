@@ -1566,7 +1566,7 @@ export default function Policy() {
           </p>
           <div className={styles.check}>
             <Checkbox onChange={handlechange} checked={checked} />
-            <p style={{ color: "grey ", marginLeft: "2rem" }}>
+            <p style={{ color: "grey ", marginLeft: "2rem", fontSize:"12px" }}>
               ¿Autoriza el manejo y uso de información personal según los
               descrito en el Política, el Manual Institucional y la Ley 1581 de
               Protección de Datos Personales?
