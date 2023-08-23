@@ -13,8 +13,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function Policy() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const navigate = useNavigate();
   const companyInfo = JSON.parse(localStorage.getItem("companyInfo"));
 
@@ -1566,7 +1570,13 @@ export default function Policy() {
           </p>
           <div className={styles.check}>
             <Checkbox onChange={handlechange} checked={checked} />
-            <p style={{ color: "grey ", marginLeft: "2rem", fontSize:"12px" }}>
+            <p
+              style={{
+                color: "grey ",
+                marginLeft: "2rem",
+                fontSize: isMobile ? "12px" : "",
+              }}
+            >
               ¿Autoriza el manejo y uso de información personal según los
               descrito en el Política, el Manual Institucional y la Ley 1581 de
               Protección de Datos Personales?
