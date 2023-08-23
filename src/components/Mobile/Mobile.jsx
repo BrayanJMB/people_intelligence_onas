@@ -183,7 +183,12 @@ export default function Mobile(props) {
 
   const accordionHasErrors = (index) => {
     const fields = ["frecuency", "agility", "quality", "closeness"];
-    return fields.some((field) => Boolean(errors[`${field}-${index}`]));
+    for (let field of fields) {
+      if (Boolean(errors[`${field}-${index}`]) && Object.keys(errors).length > 1) {
+        return true;
+      }
+    }
+    return false;
   };
 
   const validateCurrentStep = (step) => {
@@ -191,7 +196,7 @@ export default function Mobile(props) {
     console.log(props.questions[step]);
     for (let i = 0; i < props.questions[step].general.length; i++) {
       const currentQuestion = props.questions[step].general[i];
-
+      console.log(currentQuestion);
       // Validación para el campo "name"
       if (!currentQuestion.name) {
         validationErrors[`autocomplete-${i}`] = "Campo requerido";
@@ -204,7 +209,7 @@ export default function Mobile(props) {
         }
       }
     }
-
+    console.log(validationErrors);
     setErrors(validationErrors); // Establecer los errores
     return validationErrors;
   };
@@ -239,6 +244,14 @@ export default function Mobile(props) {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const isPreviousAccordionComplete = (currentAccordionIndex) => {
+    if (currentAccordionIndex === 0) return true; // Si es el primer acordeón, siempre lo consideramos "completo"
+
+    const previousAccordion =
+      props.questions[activeStep].general[currentAccordionIndex - 1];
+    return isAccordionCompleteBasedOnValue(previousAccordion);
   };
 
   const areQuestionsUpdated = () => {
@@ -326,8 +339,7 @@ export default function Mobile(props) {
                       key={index}
                       ref={accordionRefs.current[index]}
                       expanded={
-                        openAccordions.includes(index) ||
-                        accordionHasErrors(index)
+                        accordionHasErrors(index) || openAccordions.includes(index)
                       }
                       onChange={(event, isExpanded) =>
                         handleAccordionToggle(index, isExpanded)
@@ -342,7 +354,10 @@ export default function Mobile(props) {
                         aria-controls={index}
                         id={index}
                       >
-                        <div className={styles.input} style={{display:"flex", flexDirection:"column"}}>
+                        <div
+                          className={styles.input}
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
                           <h5>
                             Nombre Empleado
                             {isAccordionCompleteBasedOnValue(
@@ -363,7 +378,8 @@ export default function Mobile(props) {
                             onChange={(event, value) => {
                               event.stopPropagation();
                               props.handleSelect(activeStep, index, value);
-                              handleAccordionToggle(index, true); 
+                              handleAccordionToggle(index, true);
+                              validateCurrentStep(activeStep)
                             }}
                             isOptionEqualToValue={(option, value) =>
                               option.id === value.id
@@ -391,11 +407,18 @@ export default function Mobile(props) {
                         <div className={styles.options}>
                           {info.map((val, key) => {
                             return (
-                              <div key={key} className={styles.option} style={{diplay:"flex", flexDirection:"column"}}>
+                              <div
+                                key={key}
+                                className={styles.option}
+                                style={{
+                                  diplay: "flex",
+                                  flexDirection: "column",
+                                }}
+                              >
                                 <div
                                   style={{
                                     display: "flex",
-                                    alignItems:"center"
+                                    alignItems: "center",
                                   }}
                                 >
                                   <div>{val.title}</div>
@@ -428,11 +451,11 @@ export default function Mobile(props) {
                                       updatedQuestion[event.target.name] =
                                         event.target.value;
 
-                                      // Usamos la función modificada para verificar el objeto copiado.
                                       if (
                                         isAccordionCompleteBasedOnValue(
                                           updatedQuestion
-                                        )
+                                        ) &&
+                                        !accordionHasErrors(index)
                                       ) {
                                         handleAccordionToggle(index, false); // Cierra el acordeón
                                       }
@@ -442,6 +465,7 @@ export default function Mobile(props) {
                                         activeStep,
                                         index
                                       )(event);
+                                      validateCurrentStep(activeStep)
                                     }}
                                     value={
                                       props.questions[activeStep].general[
@@ -491,41 +515,45 @@ export default function Mobile(props) {
                     </Accordion>
                   );
                 })}
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    marginTop: "15px",
-                  }}
-                >
-                  {props.questions[activeStep].general.length < 10 && (
-                    <Button
-                      variant="contained"
-                      startIcon={<AddIcon />}
-                      style={{
-                        fontWeight: "bold",
-                        backgroundColor: "green",
-                      }}
-                      onClick={() => {
-                        props.handleAdd(activeStep);
-                      }}
-                    >
-                      Agregar
-                    </Button>
-                  )}
-                  {props.questions[activeStep].general.length > 1 && (
-                    <Button
-                      variant="contained"
-                      startIcon={<DeleteIcon />}
-                      color="error"
-                      onClick={() => {
-                        props.handleDelete(activeStep);
-                      }}
-                    >
-                      Eliminar
-                    </Button>
-                  )}
-                </Box>
+                {isPreviousAccordionComplete(
+                  props.questions[activeStep].general.length
+                ) && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      marginTop: "15px",
+                    }}
+                  >
+                    {props.questions[activeStep].general.length < 10 && (
+                      <Button
+                        variant="contained"
+                        startIcon={<AddIcon />}
+                        style={{
+                          fontWeight: "bold",
+                          backgroundColor: "green",
+                        }}
+                        onClick={() => {
+                          props.handleAdd(activeStep);
+                        }}
+                      >
+                        Agregar
+                      </Button>
+                    )}
+                    {props.questions[activeStep].general.length > 1 && (
+                      <Button
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                        onClick={() => {
+                          props.handleDelete(activeStep);
+                        }}
+                      >
+                        Eliminar
+                      </Button>
+                    )}
+                  </Box>
+                )}
               </CardContent>
             </Card>
             <Box
