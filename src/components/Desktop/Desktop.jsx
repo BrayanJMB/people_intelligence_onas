@@ -241,6 +241,8 @@ export default function Desktop(props) {
     }
   };
 
+  
+
   const updateQuestionsWithId = () => {
     const updatedQuestions = props.questions.map((question, index) => {
       return { ...question, questionId: index + 1 };
@@ -249,11 +251,13 @@ export default function Desktop(props) {
   };
 
   useEffect(() => {
+      updateQuestionsWithId();
+  }, []);
+
+  useEffect(() => {
     if (employe.length === 0) {
       getEmployee();
-    } else {
-      updateQuestionsWithId();
-    }
+    } 
   }, [props.questions]);
 
   const handlePrevious = () => {
