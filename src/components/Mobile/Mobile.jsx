@@ -34,38 +34,38 @@ import IconButton from "@mui/material/IconButton";
 
 const data = [
   {
-    title: "Relación General",
+    title: "Relación Frecuente:",
     question:
-      "1. ¿Cuándo necesitas ayuda en tus responsabilidades a qué personas acudes?",
+      "1. ¿Con quiénes interactúas más en el ejercicio de las funciones de tu cargo? ",
   },
   {
-    title: "Relación Información",
+    title: "Relación Información:",
     question:
-      "2. ¿Cuándo necesitas información actualizada y de confianza sobre la empresa a quienes acudes?",
+      "2. Cuando necesitas información para el desarrollo de tus funciones, ¿a quién(es) acudes?",
   },
   {
-    title: "Relación Inspiracional",
+    title: "Relación de Orientación / Confianza / Consejería / Mentoría:",
     question:
-      "3. ¿Cuándo necesitas consejos o feedback, quién es la personas indicada para ti?",
+      "3. Cuando necesitas guía o consejos en el trabajo, ¿a quién(es) buscas?",
   },
   {
-    title: "Relación Transaccional",
+    title: "Relación Transaccional:",
     question:
-      "4. ¿Cuándo necesitas autorizaciones para continuar con el desarrollo de tus funciones?",
+      "4. Cuando necesitas autorizaciones / validaciones para continuar con el desarrollo de tus labores, ¿a quién(es) acudes?",
   },
   {
-    title: "Relación Técnico",
+    title: "Relación Inspiracional:",
     question:
-      "5. ¿Cuándo necesitas ayuda especializada para el desarrollo de tus responsabilidades a qué personas acudes?",
+      "5. En la organización, ¿a quién(es) consideras un punto de referencia positivo en el marco profesional y/ó personal?",
   },
   {
-    title: "Relación Last",
+    title: "Relaciones de Entrada:",
     question:
-      "6. Cuándo te necesitan o te contactan, ¿generalmente que personas son y que tipo de interacción es?",
+      "6. ¿Quiénes son las personas que en tu día a día más te buscan para que les colabores con su trabajo?",
   },
   {
-    title: "Otra pregunta",
-    question: "7. Aquí iria texto pregunta",
+    title: "Pregunta 7:",
+    question: "7. ¿Aquí iría texto pregunta número 7",
   },
 ];
 
