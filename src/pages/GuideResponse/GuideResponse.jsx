@@ -4,8 +4,7 @@ import styles from "./GuideResponse.module.css";
 import IconButton from "@mui/material/IconButton";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
-//import Guia from "../../../public/images/guide-response/Guia.jpg"
-//import Guia from "../../../public/images/guide-response/Guis.jpg"
+
 
 export const GuideResponse = () => {
   const navigate = useNavigate();
