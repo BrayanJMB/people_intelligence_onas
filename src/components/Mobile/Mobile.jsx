@@ -64,8 +64,8 @@ const data = [
       "6. ¿Quiénes son las personas que en tu día a día más te buscan para que les colabores con su trabajo?",
   },
   {
-    title: "Pregunta 7:",
-    question: "7. ¿Aquí iría texto pregunta número 7",
+    title: "Relación de Influencia:",
+    question: "7. ¿Quién(es) son las personas que más influyen en su toma de decisiones en el trabajo?",
   },
 ];
 
