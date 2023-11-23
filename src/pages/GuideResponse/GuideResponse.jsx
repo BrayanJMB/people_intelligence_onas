@@ -4,6 +4,8 @@ import styles from "./GuideResponse.module.css";
 import IconButton from "@mui/material/IconButton";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import ArrowCircleLeftOutlinedIcon from "@mui/icons-material/ArrowCircleLeftOutlined";
+//import Guia from "../../../public/images/guide-response/Guia.jpg"
+//import Guia from "../../../public/images/guide-response/Guis.jpg"
 
 export const GuideResponse = () => {
   const navigate = useNavigate();
@@ -23,6 +25,8 @@ export const GuideResponse = () => {
           Hola bienvenido, esta es una guía para ayudarte a responder
           correctamente la encuesta
         </h4>
+        
+        <img src="/images/guide-response/Guia.jpg" alt="Descripción imagen" style={{ width: '100%' }}/>
         <div className={styles.move}>
           <IconButton
             aria-label="previous"
