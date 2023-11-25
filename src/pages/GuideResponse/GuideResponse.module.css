@@ -1,3 +1,7 @@
+.screen {
+  margin-top: 6.5rem;
+}
+
 .inner_box {
   background-color: white;
   margin: 1rem;
@@ -6,17 +10,21 @@
 .inner_box p {
   font-size: large;
 }
-
+.red {
+  color: red;
+  font-style: italic;
+  font-weight: 500;
+}
 .top {
-  margin-top: 2rem;
-  line-height: 1rem;
+  padding-top: 1rem;
+  line-height: 2rem;
 }
 
 .bullets {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 6rem;
 }
 
 .bullets > span {
@@ -36,9 +44,12 @@
 }
 .move {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: center;
   flex-wrap: nowrap;
+  justify-content: space-between;
 }
+
 .check {
   display: flex;
   align-items: center;
@@ -49,17 +60,4 @@
 }
 .disabled {
   display: none;
-}
-.pagination ul li button {
-  color: white;
-  background-color: rgb(199, 199, 199);
-}
-.pagination ul li button:hover {
-  color: #00b0f0;
-  background-color: rgb(199, 199, 199);
-  font-weight: bold;
-}
-.pagination {
-  margin: 0 auto;
-  margin-bottom: 1rem;
 }
