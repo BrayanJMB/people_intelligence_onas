@@ -19,7 +19,6 @@ export default function Home() {
   let { code } = queryString.parse(location.search);
   let personId = code?.split("/")[0];
   let versionId = code?.split("/")[1];
-
   let dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
   if (!code && !dataCookie) {
     navigate("/thanks");

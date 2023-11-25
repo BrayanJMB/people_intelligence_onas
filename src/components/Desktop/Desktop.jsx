@@ -123,6 +123,7 @@ export default function Desktop(props) {
   const [checked, setChecked] = useState(false);
   const [employe, setEmploye] = useState([]);
   const paginationRefs = useRef([]);
+
   const dataCookie = JSON.parse(localStorage.getItem("dataCookie"));
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const autoCompleteRefs = useRef({});
@@ -135,6 +136,7 @@ export default function Desktop(props) {
         baseURL: `${process.env.REACT_APP_API_URL}ONasSurvey/EmpleadosSurveyOnas/`,
       })
       .get(`${dataCookie.personId}/${dataCookie.versionId}`, config)
+
       .then((res) => {
         let filter = [];
         res.data.map((val, key) => {
