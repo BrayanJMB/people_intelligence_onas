@@ -4,9 +4,6 @@ import Navbar from "../../components/Navbar";
 
 export default function Thanks() {
   const companyInfo = JSON.parse(localStorage.getItem("companyInfo"));
-  localStorage.removeItem("companyInfo");
-  localStorage.removeItem("urlInfo");
-  localStorage.removeItem("dataCookie");
   return (
     <div className={styles.screen}>
       <Navbar logo={companyInfo?.logo} />
