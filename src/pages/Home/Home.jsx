@@ -72,13 +72,13 @@ export default function Home() {
         {data?.empresa === "Alianza Team" ? (
           <>
             <h3>
-              Hola <strong className={styles.red}>{data?.nombrePersona}</strong>
+              Hola <strong style={{color:"#0833a2"}}>{data?.nombrePersona}</strong>
             </h3>
             <p>
               Te damos la bienvenida a la herramienta de recolección de datos
               para el desarrollo del análisis de redes organizacionales que
               People Intelligence está desarrollando para{" "}
-              <strong className={styles.red + " " + styles.top}>
+              <strong style={{color:"#0833a2"}} className={styles.red + " " + styles.top}>
                 {" "}
                 {data?.empresa}{" "}
               </strong>
