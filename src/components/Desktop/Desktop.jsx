@@ -217,7 +217,6 @@ export default function Desktop(props) {
       }
     }
 
-    console.log(newErrors);
     setErrors(newErrors);
     return !hasErrors;
   };
@@ -273,7 +272,6 @@ export default function Desktop(props) {
   }, []);
 
   useEffect(() => {
-    console.log(props.questions);
     if (employe.length === 0) {
       getEmployee();
     }
