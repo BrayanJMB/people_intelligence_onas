@@ -120,10 +120,8 @@ export default function Connexion() {
           questions: data.questions,
           conexion: data.conexion,
         });
-      console.log(response);
       navigate("/thanks");
     } catch (error) {
-      console.log(error);
     }
   };
 

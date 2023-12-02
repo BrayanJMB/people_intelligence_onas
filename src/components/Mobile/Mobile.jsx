@@ -196,10 +196,8 @@ export default function Mobile(props) {
 
   const validateCurrentStep = (step) => {
     let validationErrors = {};
-    console.log(props.questions[step]);
     for (let i = 0; i < props.questions[step].general.length; i++) {
       const currentQuestion = props.questions[step].general[i];
-      console.log(currentQuestion);
       // Validación para el campo "name"
       if (!currentQuestion.name) {
         validationErrors[`autocomplete-${i}`] = "Campo requerido";
@@ -212,13 +210,11 @@ export default function Mobile(props) {
         }
       }
     }
-    console.log(validationErrors);
     setErrors(validationErrors); // Establecer los errores
     return validationErrors;
   };
 
   const handleNext = (event, step) => {
-    console.log(props.questions);
     if (Object.keys(validateCurrentStep(step)).length === 0) {
       if (activeStep === props.questions.length - 1) {
         props.Next(event);
